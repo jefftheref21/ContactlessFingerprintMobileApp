@@ -79,13 +79,15 @@ def verify_fingerprint():
 
 @app.route('/processing', methods=['POST'])
 def process():
+    if 'image' not in request.files:
+        return jsonify({'msg': 'No file found'})
     file = request.files['image']
     
     img = Image.open(file.stream)
     
     data = file.stream.read()
     #data = base64.encodebytes(data)
-    data = base64.b64encode(data).decode()   
+    data = base64.b64encode(data).decode()
 
     return jsonify({
                 'msg': 'success', 
@@ -95,4 +97,4 @@ def process():
            })
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000, debug=True)

@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'package:fingerprint/pages/enrollment_page.dart';
+import 'package:fingerprint/models/user.dart';
 
 class EnrollmentStatePage extends StatelessWidget {
+  const EnrollmentStatePage({
+    super.key,
+    required this.user
+  });
+  
+  final User user;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,6 +24,7 @@ class EnrollmentStatePage extends StatelessWidget {
           children: <Widget>[
             const Text(
               'Enrollment Complete!',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,

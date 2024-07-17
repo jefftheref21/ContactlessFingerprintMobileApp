@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fingerprint/pages/enrollment_scan_page.dart';
 import 'package:fingerprint/constants.dart';
 import 'package:fingerprint/network_call.dart';
+import 'package:fingerprint/models/user.dart';
 
 // Must be global to be cleared by EnrollmentStatePage
 TextEditingController usernameController = TextEditingController();
@@ -9,10 +10,10 @@ TextEditingController passwordController = TextEditingController();
 
 class EnrollmentPage extends StatefulWidget {
   const EnrollmentPage({
-      required this.url,
+      required this.uri,
   });
 
-  final String url;
+  final String uri;
 
   @override
   State<EnrollmentPage> createState() => _EnrollmentPageState();
@@ -22,13 +23,14 @@ class _EnrollmentPageState extends State<EnrollmentPage>{
   final _formKey = GlobalKey<FormState>();
   
   late bool passwordVisible;
+  late User user;
 
   @override
   void initState() {
     super.initState();
     passwordVisible = false;
+    user = User(username: '', password: '', leftFingerprintPath: '', rightFingerprintPath: '');
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -143,10 +145,10 @@ class _EnrollmentPageState extends State<EnrollmentPage>{
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
-                  // Make sure username isn't taken
-                  String username = usernameController.text;
-                  String password = passwordController.text;
-                  var check = await checkUsername(widget.url, username);
+                  user.username = usernameController.text;
+                  user.password = passwordController.text;
+                  // Check if username is already taken
+                  var check = await checkUsername(widget.uri, user.username);
                   if (check['status'] == 422) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -161,9 +163,8 @@ class _EnrollmentPageState extends State<EnrollmentPage>{
                       MaterialPageRoute(
                         builder: (context) {
                           return EnrollmentScanPage(
-                            url: '${widget.url}/scan',
-                            username: username,
-                            password: password,
+                            uri: '${widget.uri}/scan',
+                            user: user,
                           );
                         },
                       ),

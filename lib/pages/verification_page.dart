@@ -9,10 +9,10 @@ import 'package:fingerprint/network_call.dart';
 class VerificationPage extends StatefulWidget {
   const VerificationPage({
     super.key,
-    required this.url,
+    required this.uri,
   });
 
-  final String url;
+  final String uri;
 
   @override
   State<VerificationPage> createState() => _VerificationPageState();
@@ -107,7 +107,7 @@ class _VerificationPageState extends State<VerificationPage> {
             child: ElevatedButton(
               onPressed: () async {
                 User user = User(username: usernameController.text, password: passwordController.text);
-                var response = await checkCredentials(widget.url, user);
+                var response = await checkCredentials(widget.uri, user);
                 if (response['status'] == 200) {
                   user.leftFingerprintPath = response['leftFingerprintPath'];
                   user.rightFingerprintPath = response['rightFingerprintPath'];
@@ -125,6 +125,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   MaterialPageRoute(
                     builder: (context) {
                       return VerificationScanPage(
+                        uri: '${widget.uri}/scan',
                         user: user,
                       );
                     },

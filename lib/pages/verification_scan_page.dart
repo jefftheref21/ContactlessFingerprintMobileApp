@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:fingerprint/network_call.dart';
 import 'package:fingerprint/pages/verification_results_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fingerprint/constants.dart';
@@ -11,9 +14,11 @@ ImageIcon verificationIcon = const ImageIcon(AssetImage("assets/verification_ico
 class VerificationScanPage extends StatefulWidget {
   const VerificationScanPage({
     super.key,
+    required this.uri,
     required this.user,
   });
 
+  final String uri;
   final User user;
 
   @override
@@ -23,8 +28,6 @@ class VerificationScanPage extends StatefulWidget {
 class _VerificationScanPageState extends State<VerificationScanPage> {
   bool firstScanComplete = false;
   bool secondScanComplete = false;
-  String leftFingerprintPath = '';
-  String rightFingerprintPath = '';
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +71,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () async {
-                    leftFingerprintPath = await Navigator.push(
+                    widget.user.leftFingerprintPath = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) {
@@ -87,7 +90,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                 const SizedBox(width: 40),
                 ElevatedButton(
                   onPressed: () async {
-                    rightFingerprintPath = await Navigator.push(
+                    widget.user.rightFingerprintPath = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) {
@@ -110,9 +113,9 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                firstScanComplete ? Image.file(File(leftFingerprintPath), width: 140, height: 140) : verificationIcon,
+                firstScanComplete ? Image.file(File(widget.user.leftFingerprintPath), width: 140, height: 140) : verificationIcon,
                 const SizedBox(width: 40),
-                secondScanComplete ? Image.file(File(rightFingerprintPath), width: 140, height: 140) : verificationIcon,
+                secondScanComplete ? Image.file(File(widget.user.rightFingerprintPath), width: 140, height: 140) : verificationIcon,
               ],
             ),
             const SizedBox(height: 20),
@@ -126,8 +129,9 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                   );
                   return;
                 }
-                widget.user.leftFingerprintPath = leftFingerprintPath;
-                widget.user.rightFingerprintPath = rightFingerprintPath;
+
+                uploadImageToServer(widget.uri, File(widget.user.leftFingerprintPath));
+                uploadImageToServer(widget.uri, File(widget.user.rightFingerprintPath));
                 
                 Navigator.push(
                   context,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:fingerprint/pages/home.dart';
 import 'package:fingerprint/constants.dart';
+import 'package:flutter/services.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -20,6 +21,10 @@ class Biometrics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       title: 'Biometrics',
       theme: ThemeData(

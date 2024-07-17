@@ -110,65 +110,6 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
           ),
         ],
       )
-      
-      // Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       Padding(
-      //         padding: const EdgeInsets.only(top: 30.0, bottom: 15.0),
-      //         child: Container(
-      //           width: 120,
-      //           height: 120,
-      //           decoration: BoxDecoration(
-      //               borderRadius: BorderRadius.circular(40),
-      //               border: Border.all(color: MyColors.bairdPoint)),
-      //           child: const Icon(
-      //             Icons.fingerprint,
-      //             size: 80,
-      //             color: MyColors.bairdPoint,
-      //           ),
-      //         ),
-      //       ),
-      //       const Align(
-      //         alignment: Alignment.centerLeft,
-      //         child: Padding(
-      //           padding: EdgeInsets.only(left: 30.0),
-      //           child: Text(
-      //             'Verification Results',
-      //             style: TextStyle(
-      //               fontSize: 16,
-      //               fontWeight: FontWeight.bold,
-      //             ),
-      //             textAlign: TextAlign.center,
-      //           ),
-      //         ),
-      //       ),
-      //       Padding(
-      //         padding: const EdgeInsets.only(top: 15.0, bottom: 30.0, left: 30.0, right: 30.0),
-      //         child: Column(
-      //           children: <Widget>[
-      //             Text(
-      //               'Username: ${widget.user.username}',
-      //               style: const TextStyle(
-      //                 fontSize: 16,
-      //               ),
-      //               textAlign: TextAlign.center,
-      //             ),
-      //             const SizedBox(height: 10),
-      //             Text(
-      //               'Verification Result: ${widget.verificationResult.toString()}',
-      //               style: const TextStyle(
-      //                 fontSize: 16,
-      //               ),
-      //               textAlign: TextAlign.center,
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }

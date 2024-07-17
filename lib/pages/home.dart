@@ -6,8 +6,8 @@ import 'package:fingerprint/pages/identification_page.dart';
 import 'package:fingerprint/constants.dart';
 
 
-// String baseUrl = "http://192.168.0.22:5000";
-String baseUrl = "http://172.20.10.2:5000";
+// String baseUri = "http://192.168.0.22:5000";
+String baseUri = "http://128.205.33.222:5000";
 
 class Home extends StatefulWidget {
   const Home({
@@ -38,8 +38,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final List pages = [
-      {"page": EnrollmentPage(url: "$baseUrl/enrollment"), "title": "Enrollment"},
-      {"page": VerificationPage(url: "$baseUrl/verification"), "title": "Verification"},
+      {"page": EnrollmentPage(uri: "$baseUri/enrollment"), "title": "Enrollment"},
+      {"page": VerificationPage(uri: "$baseUri/verification"), "title": "Verification"},
       {"page": IdentificationPage(), "title": "Identification"},
     ];
 

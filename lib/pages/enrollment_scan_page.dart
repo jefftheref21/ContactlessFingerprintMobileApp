@@ -13,14 +13,12 @@ ImageIcon verificationIcon = const ImageIcon(AssetImage("assets/verification_ico
 class EnrollmentScanPage extends StatefulWidget {
   const EnrollmentScanPage({
     super.key,
-    required this.url,
-    required this.username,
-    required this.password,
+    required this.uri,
+    required this.user,
   });
 
-  final String url;
-  final String username;
-  final String password;
+  final String uri;
+  final User user;
 
   @override
   State<EnrollmentScanPage> createState() => _EnrollmentScanPageState();
@@ -29,8 +27,6 @@ class EnrollmentScanPage extends StatefulWidget {
 class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
   bool firstScanComplete = false;
   bool secondScanComplete = false;
-  String leftFingerprintPath = '';
-  String rightFingerprintPath = '';
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +43,7 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
               child: Padding(
                 padding: EdgeInsets.only(left: 30.0),
                 child: Text(
-                  'Welcome ${widget.username},',
+                  'Welcome ${widget.user.username},',
                   style: const TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
@@ -58,22 +54,23 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'Scan your fingerprints to enroll.',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: MyColors.harrimanBlue
+            const Padding(
+              padding: EdgeInsets.only(left: 15.0, top: 30.0, right: 15.0),
+              child: Text(
+                'Scan your fingerprints to enroll.',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.harrimanBlue
+                ),
               ),
             ),
-            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () async {
-                    leftFingerprintPath = await Navigator.push(
+                    widget.user.leftFingerprintPath = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) {
@@ -92,7 +89,7 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
                 const SizedBox(width: 40),
                 ElevatedButton(
                   onPressed: () async {
-                    rightFingerprintPath = await Navigator.push(
+                    widget.user.rightFingerprintPath = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) {
@@ -115,9 +112,9 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                firstScanComplete ? Image.file(File(leftFingerprintPath), width: 140, height: 140) : verificationIcon,
+                firstScanComplete ? Image.file(File(widget.user.leftFingerprintPath), width: 140, height: 140) : verificationIcon,
                 const SizedBox(width: 40),
-                secondScanComplete ? Image.file(File(rightFingerprintPath), width: 140, height: 140) : verificationIcon,
+                secondScanComplete ? Image.file(File(widget.user.rightFingerprintPath), width: 140, height: 140) : verificationIcon,
               ],
             ),
             const SizedBox(height: 20),
@@ -132,20 +129,14 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
                   return;
                 }
 
-                User user = User(
-                  username: widget.username,
-                  password: widget.password,
-                  leftFingerprintPath: leftFingerprintPath,
-                  rightFingerprintPath: rightFingerprintPath,
-                );
-                var statusCode = await enrollUser(widget.url, user);
+                final result = await enrollUser(widget.uri, widget.user);
 
-                if (statusCode['status'] == 200) {
+                if (result == 200) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return EnrollmentStatePage();
+                        return EnrollmentStatePage(user: widget.user);
                       },
                     ),
                   );

@@ -8,8 +8,6 @@ import 'package:fingerprint/models/user.dart';
 import 'package:fingerprint/pages/enrollment_state_page.dart';
 import 'package:fingerprint/constants.dart';
 
-ImageIcon verificationIcon = const ImageIcon(AssetImage("assets/verification_icon.png"), color: MyColors.harrimanBlue,  size: 140);
-
 class EnrollmentScanPage extends StatefulWidget {
   const EnrollmentScanPage({
     super.key,
@@ -41,7 +39,7 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: EdgeInsets.only(left: 30.0),
+                padding: const EdgeInsets.only(left: 30.0),
                 child: Text(
                   'Welcome ${widget.user.username},',
                   style: const TextStyle(
@@ -75,7 +73,7 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
                       MaterialPageRoute(
                         builder: (context) {
                           return const CameraPage(
-                            title: "First Scan",
+                            title: "Left Hand Scan",
                           );
                         },
                       ),
@@ -94,7 +92,7 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
                       MaterialPageRoute(
                         builder: (context) {
                           return const CameraPage(
-                            title: "Second Scan",
+                            title: "Right Hand Scan",
                             leftSide: false,
                             );
                         },
@@ -112,9 +110,9 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                firstScanComplete ? Image.file(File(widget.user.leftFingerprintPath), width: 140, height: 140) : verificationIcon,
+                firstScanComplete ? Image.file(File(widget.user.leftFingerprintPath), width: 140, height: 140) : MyIcons.verificationIcon,
                 const SizedBox(width: 40),
-                secondScanComplete ? Image.file(File(widget.user.rightFingerprintPath), width: 140, height: 140) : verificationIcon,
+                secondScanComplete ? Image.file(File(widget.user.rightFingerprintPath), width: 140, height: 140) : MyIcons.verificationIcon,
               ],
             ),
             const SizedBox(height: 20),
@@ -131,20 +129,24 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
 
                 final result = await enrollUser(widget.uri, widget.user);
 
-                if (result == 200) {
+                if (result != 200) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Enrollment failed.'),
+                      ),
+                    );
+                  }
+                  
+                }
+
+                if (context.mounted) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) {
                         return EnrollmentStatePage(user: widget.user);
                       },
-                    ),
-                  );
-                }
-                else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Enrollment failed.'),
                     ),
                   );
                 }

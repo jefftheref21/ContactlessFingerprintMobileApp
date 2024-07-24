@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:fingerprint/pages/enrollment_page.dart';
 import 'package:fingerprint/models/user.dart';
 
 class EnrollmentStatePage extends StatelessWidget {
@@ -8,7 +7,7 @@ class EnrollmentStatePage extends StatelessWidget {
     super.key,
     required this.user
   });
-  
+
   final User user;
 
   @override
@@ -33,8 +32,6 @@ class EnrollmentStatePage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                usernameController.clear();
-                passwordController.clear();
                 Navigator.pop(context);
                 Navigator.pop(context);
               },

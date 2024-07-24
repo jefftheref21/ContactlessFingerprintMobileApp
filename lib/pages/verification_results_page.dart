@@ -4,18 +4,24 @@ import 'package:fingerprint/models/user.dart';
 import 'package:fingerprint/constants.dart';
 
 class VerificationResultsPage extends StatefulWidget {
-  VerificationResultsPage({
-    Key? key,
+  const VerificationResultsPage({
+    super.key,
     required this.user,
-    this.score = 0.0,
-    this.pred = false,
-    this.simList = const <double>[0.5, 0.3, 0.2, 0.4],
-  }) : super(key: key);
+    required this.leftScore,
+    required this.rightScore,
+    required this.leftPred,
+    required this.rightPred,
+    required this.leftSimList,
+    required this.rightSimList,
+  });
 
   final User user;
-  final double score;
-  final bool pred;
-  final List<double> simList;
+  final double leftScore;
+  final double rightScore;
+  final String leftPred;
+  final String rightPred;
+  final List<dynamic> leftSimList;
+  final List<dynamic> rightSimList;
 
   @override
   State<VerificationResultsPage> createState() => _VerificationResultsPageState();
@@ -23,7 +29,8 @@ class VerificationResultsPage extends StatefulWidget {
 
 class _VerificationResultsPageState extends State<VerificationResultsPage> with SingleTickerProviderStateMixin{
   late TabController _tabController;
-
+  
+  @override
   void initState() {
     super.initState();
     _tabController = TabController(
@@ -38,7 +45,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: const Icon(Icons.exit_to_app),
             onPressed: () {
               Navigator.pop(context);
               Navigator.pop(context);
@@ -75,35 +82,123 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Row(
             children: <Widget>[
-              //const SizedBox(height: 20,),
-              Text("Results for ${widget.user.username}",
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Container(
+                  color: MyColors.lakeLaselle,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      const Text(
+                        'Left',
+                        style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16),
+                      ),
+                      const SizedBox(height: 20),
+                      Text("${widget.leftScore}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.niagaraWhirlpool,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(widget.leftPred,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.niagaraWhirlpool,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(""), // Placeholder for spacing
+                      for (double i in widget.leftSimList) Text("$i", style: const TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool)),
+                    ]
+                  ),
                 ),
               ),
-              Text("Your fingerprints have a matching score of ${widget.score}",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                flex: 2,
+                child: Container(
+                  color: MyColors.niagaraWhirlpool,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text("Results for ${widget.user.username}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.bairdPoint,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text("Final Matching Score",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.bairdPoint,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text("Prediction",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.bairdPoint,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text("Distal Matching scores",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.bairdPoint,
+                        ),
+                      ),
+                      for (int i = 1; i < 5; i++) Text("Fingerprint $i", style: const TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint)),
+                    ],
+                  ),
                 ),
               ),
-              Text("Prediction: ${widget.pred}",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Container(
+                  color: MyColors.lakeLaselle,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      const Text(
+                        'Right',
+                        style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16),
+                      ),
+                      const SizedBox(height: 20),
+                      Text("${widget.rightScore}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.niagaraWhirlpool,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(widget.rightPred,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.niagaraWhirlpool,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(""), // Placeholder for spacing
+                      for (double i in widget.rightSimList) Text("$i", style: const TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool)),
+                    ]
+                  ),
                 ),
               ),
-              Text("Matching Distals:"),
-              for (double i in widget.simList) Text("Fingerprint $i"),
+            ]
+          ),
+          Row(
+            children: <Widget>[
 
             ],
-          ),
-          Center(
-            child: Text("test"),
           ),
           Center(
             child: Text("test"),

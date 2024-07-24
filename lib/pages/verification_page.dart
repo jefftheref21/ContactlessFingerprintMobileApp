@@ -5,6 +5,7 @@ import 'package:fingerprint/pages/verification_scan_page.dart';
 import 'package:fingerprint/models/user.dart';
 
 import 'package:fingerprint/network_call.dart';
+import 'dart:convert';
 
 class VerificationPage extends StatefulWidget {
   const VerificationPage({
@@ -19,10 +20,17 @@ class VerificationPage extends StatefulWidget {
 }
 
 class _VerificationPageState extends State<VerificationPage> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  
-  bool passwordVisible = false;
+  late TextEditingController usernameController;
+  late TextEditingController passwordController;
+  late bool passwordVisible;
+
+  @override
+  void initState() {
+    super.initState();
+    passwordVisible = false;
+    usernameController = TextEditingController();
+    passwordController = TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,30 +115,38 @@ class _VerificationPageState extends State<VerificationPage> {
             child: ElevatedButton(
               onPressed: () async {
                 User user = User(username: usernameController.text, password: passwordController.text);
-                var response = await checkCredentials(widget.uri, user);
-                if (response['status'] == 200) {
-                  user.leftFingerprintPath = response['leftFingerprintPath'];
-                  user.rightFingerprintPath = response['rightFingerprintPath'];
+                final response = await checkCredentials(widget.uri, user);
+                if (response.statusCode == 200) {
+                  var responseBody = await json.decode(response.body);
+                  user.leftFingerprintPath = responseBody['leftFingerprintPath'];
+                  user.rightFingerprintPath = responseBody['rightFingerprintPath'];
                 }
                 else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(response['message']),
-                    ),
-                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(response['message']),
+                      ),
+                    );
+                  }
                   return;
                 }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return VerificationScanPage(
-                        uri: '${widget.uri}/scan',
-                        user: user,
-                      );
-                    },
-                  ),
-                );
+                usernameController.clear();
+                passwordController.clear();
+
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return VerificationScanPage(
+                          uri: '${widget.uri}/scan',
+                          user: user,
+                        );
+                      },
+                    ),
+                  );
+                }
               },
               child: const Text('Next'),
             ),

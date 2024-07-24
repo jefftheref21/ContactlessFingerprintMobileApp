@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:fingerprint/network_call.dart';
 import 'package:fingerprint/pages/verification_results_page.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +6,7 @@ import 'package:fingerprint/pages/camera_page.dart';
 import 'package:fingerprint/models/user.dart';
 
 import 'dart:io';
-
-ImageIcon verificationIcon = const ImageIcon(AssetImage("assets/verification_icon.png"), color: MyColors.harrimanBlue,  size: 140);
+import 'dart:convert';
 
 class VerificationScanPage extends StatefulWidget {
   const VerificationScanPage({
@@ -26,8 +23,21 @@ class VerificationScanPage extends StatefulWidget {
 }
 
 class _VerificationScanPageState extends State<VerificationScanPage> {
-  bool firstScanComplete = false;
-  bool secondScanComplete = false;
+  late bool firstScanComplete;
+  late bool secondScanComplete;
+  late String enrolled1;
+  late String enrolled2;
+
+  @override
+  void initState() {
+    super.initState();
+    firstScanComplete = false;
+    secondScanComplete = false;
+    enrolled1 = widget.user.leftFingerprintPath;
+    enrolled2 = widget.user.rightFingerprintPath;
+    widget.user.leftFingerprintPath = '';
+    widget.user.rightFingerprintPath = '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,14 +123,14 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                firstScanComplete ? Image.file(File(widget.user.leftFingerprintPath), width: 140, height: 140) : verificationIcon,
+                firstScanComplete ? Image.file(File(widget.user.leftFingerprintPath), width: 140, height: 140) : MyIcons.verificationIcon,
                 const SizedBox(width: 40),
-                secondScanComplete ? Image.file(File(widget.user.rightFingerprintPath), width: 140, height: 140) : verificationIcon,
+                secondScanComplete ? Image.file(File(widget.user.rightFingerprintPath), width: 140, height: 140) : MyIcons.verificationIcon,
               ],
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (firstScanComplete == false || secondScanComplete == false) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -130,17 +140,54 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                   return;
                 }
 
-                uploadImageToServer(widget.uri, File(widget.user.leftFingerprintPath));
-                uploadImageToServer(widget.uri, File(widget.user.rightFingerprintPath));
-                
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VerificationResultsPage(
-                      user: widget.user,
+                print(widget.user.leftFingerprintPath);
+
+                final response = await verifyFingerprints(widget.uri, widget.user, enrolled1, enrolled2);
+
+                if (response.statusCode != 200) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Verification failed.'),
+                      ),
+                    );
+                  }
+                  return;
+                }
+
+                final responseBody = await response.stream.bytesToString();
+                final result = json.decode(responseBody);
+
+                var leftScore = result['left_score'];
+                var rightScore = result['right_score'];
+                var leftPred = result['left_pred'];
+                var rightPred = result['right_pred'];
+                var leftSimList = result['left_sim_list'];
+                var rightSimList = result['right_sim_list'];
+
+                leftScore = double.parse(leftScore.toStringAsFixed(4));
+                rightScore = double.parse(rightScore.toStringAsFixed(4));
+                for (var i = 0; i < 4; i++) {
+                  leftSimList[i] = double.parse(leftSimList[i].toStringAsFixed(4));
+                  rightSimList[i] = double.parse(rightSimList[i].toStringAsFixed(4));
+                }
+
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VerificationResultsPage(
+                        user: widget.user,
+                        leftScore: leftScore,
+                        rightScore: rightScore,
+                        leftPred: leftPred,
+                        rightPred: rightPred,
+                        leftSimList: leftSimList,
+                        rightSimList: rightSimList,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
               child: const Text('Verify'),
             ),

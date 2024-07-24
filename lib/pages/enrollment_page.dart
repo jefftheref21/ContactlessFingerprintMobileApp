@@ -4,13 +4,10 @@ import 'package:fingerprint/constants.dart';
 import 'package:fingerprint/network_call.dart';
 import 'package:fingerprint/models/user.dart';
 
-// Must be global to be cleared by EnrollmentStatePage
-TextEditingController usernameController = TextEditingController();
-TextEditingController passwordController = TextEditingController();
-
 class EnrollmentPage extends StatefulWidget {
   const EnrollmentPage({
-      required this.uri,
+    super.key, 
+    required this.uri,
   });
 
   final String uri;
@@ -20,6 +17,8 @@ class EnrollmentPage extends StatefulWidget {
 }
 
 class _EnrollmentPageState extends State<EnrollmentPage>{
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   
   late bool passwordVisible;
@@ -121,7 +120,7 @@ class _EnrollmentPageState extends State<EnrollmentPage>{
                   },
                   decoration: InputDecoration(
                     labelText: 'Enter your password',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
                      icon: Icon(passwordVisible ? Icons.visibility: Icons.visibility_off),
                      onPressed: () {
@@ -145,19 +144,26 @@ class _EnrollmentPageState extends State<EnrollmentPage>{
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
+
                   user.username = usernameController.text;
                   user.password = passwordController.text;
                   // Check if username is already taken
-                  var check = await checkUsername(widget.uri, user.username);
-                  if (check['status'] == 422) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Username is already taken.'),
-                      ),
-                    );
+                  final check = await checkUsername(widget.uri, user.username);
+                  if (check != 200) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Username is already taken.'),
+                        ),
+                      );
+                    }
+                    return;
                   }
-                  else {
-                    // Move to next page for fingerprint enrollment
+
+                  usernameController.clear();
+                  passwordController.clear();
+
+                  if (context.mounted) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

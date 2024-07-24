@@ -4,6 +4,8 @@ import 'dart:math' as math;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import "package:fingerprint/main.dart";
+import 'package:image/image.dart' as img;
+import 'package:exif/exif.dart';
 
 import 'package:fingerprint/constants.dart';
 
@@ -27,15 +29,11 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+  
   late FlashMode flashMode;
-  late bool showFlashMode = false;
   late int flashIndex = 0;
 
-  AnimationController? animationController;
-  List animation = [];
   List icons = [Icons.flash_auto, Icons.flash_off, Icons.flash_on];
-  OverlayEntry? overlayEntry;
-  GlobalKey globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -45,83 +43,29 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
       // Get a specific camera from the list of available cameras.
       cameras.first,
       // Define the resolution to use.
-      ResolutionPreset.medium,
+      ResolutionPreset.max,
     );
 
     flashMode = FlashMode.off;
 
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
-
-    animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    for (int i = 3; i > 0; i--) {
-      animation.add(Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-          parent: animationController!,
-          curve: Interval(0.2 * i, 1.0, curve: Curves.ease))));
-    }
   }
 
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
-    overlayEntry!.remove();
     _controller.dispose();
     super.dispose();
-  }
-
-  _showOverLay() async {
-    RenderBox? renderBox =
-        globalKey.currentContext!.findRenderObject() as RenderBox?;
-    Offset offset = renderBox!.localToGlobal(Offset.zero);
-
-    OverlayState? overlayState = Overlay.of(context);
-    overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        left: offset.dx,
-        bottom: renderBox.size.height + 16,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (int i = 0; i < animation.length; i++)
-              ScaleTransition(
-                scale: animation[i],
-                child: FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
-                      flashMode = FlashMode.values[i];
-                      flashIndex = i;
-                      _controller.setFlashMode(flashMode);
-                    });
-                    // Fluttertoast.showToast(msg: 'Icon Button Pressed');
-                  },
-                  child: Icon(
-                    icons[i],
-                  ),
-                  backgroundColor: MyColors.lakeLaselle,
-                  mini: true,
-                ),
-              )
-          ],
-        ),
-      ),
-    );
-    animationController!.addListener(() {
-      overlayState!.setState(() {});
-    });
-    animationController!.forward();
-    overlayState!.insert(overlayEntry!);
-
-    await Future.delayed(const Duration(seconds: 5))
-        .whenComplete(() => animationController!.reverse())
-        .whenComplete(() => overlayEntry!.remove());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        title: Text(widget.title),
+        automaticallyImplyLeading: false,
+      ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
@@ -153,6 +97,7 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           FloatingActionButton(
+            heroTag: "tag1",
             // Provide an onPressed callback.
             onPressed: () async {
               // Take the Picture in a try / catch block. If anything goes wrong,
@@ -164,6 +109,33 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
                 // Attempt to take a picture and get the file `image`
                 // where it was saved.
                 final image = await _controller.takePicture();
+                // final imageBytes = await image.readAsBytes();
+                // final exifData = await readExifFromBytes(imageBytes);
+                // final orientation = exifData!['Image Orientation']?.values?.first ?? 1;
+
+                // // Decode the image
+                // final decodedImage = img.decodeImage(imageBytes);
+
+                // // Correct the orientation
+                // img.Image orientedImage;
+                // switch (orientation) {
+                //   case 3:
+                //     orientedImage = img.copyRotate(decodedImage!, 180);
+                //     break;
+                //   case 6:
+                //     orientedImage = img.copyRotate(decodedImage!, 90);
+                //     break;
+                //   case 8:
+                //     orientedImage = img.copyRotate(decodedImage!, -90);
+                //     break;
+                //   default:
+                //     orientedImage = decodedImage!;
+                // }
+
+                // // Save the corrected image to a file
+                // final pngImage = img.encodePng(orientedImage);
+                // final file = File('${image.path}.png');
+                // await file.writeAsBytes(pngImage);
 
                 if (!context.mounted) return;
 
@@ -186,10 +158,24 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
             child: const Icon(Icons.camera_alt),
           ),
           FloatingActionButton(
-            key: globalKey,
+            heroTag: "tag2",
             shape: const CircleBorder(),
             onPressed: () {
-              _showOverLay();
+              setState(() {
+                flashIndex = (flashIndex + 1) % 3;
+                switch (flashIndex) {
+                  case 0:
+                    flashMode = FlashMode.auto;
+                    break;
+                  case 1:
+                    flashMode = FlashMode.off;
+                    break;
+                  case 2:
+                    flashMode = FlashMode.always;
+                    break;
+                }
+                _controller.setFlashMode(flashMode);
+              });
             },
             child: Icon(icons[flashIndex])//const Icon(Icons.flash_off_outlined),
             /*switch (flashMode) {

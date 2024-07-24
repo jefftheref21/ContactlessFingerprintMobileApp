@@ -9,9 +9,6 @@ import 'package:exif/exif.dart';
 
 import 'package:fingerprint/constants.dart';
 
-Image overlay = Image.asset("assets/fingerprint_overlay_2.png");
-
-
 class CameraPage extends StatefulWidget {
   const CameraPage({
     super.key,
@@ -29,7 +26,7 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
-  
+
   late FlashMode flashMode;
   late int flashIndex = 0;
 
@@ -109,14 +106,14 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
                 // Attempt to take a picture and get the file `image`
                 // where it was saved.
                 final image = await _controller.takePicture();
-                // final imageBytes = await image.readAsBytes();
-                // final exifData = await readExifFromBytes(imageBytes);
-                // final orientation = exifData!['Image Orientation']?.values?.first ?? 1;
+                final imageBytes = await image.readAsBytes();
+                final exifData = await readExifFromBytes(imageBytes);
+                final orientation = exifData!['Image Orientation']?.values?.first ?? 1;
 
-                // // Decode the image
-                // final decodedImage = img.decodeImage(imageBytes);
+                // Decode the image
+                final decodedImage = img.decodeImage(imageBytes);
 
-                // // Correct the orientation
+                // Correct the orientation
                 // img.Image orientedImage;
                 // switch (orientation) {
                 //   case 3:
@@ -132,10 +129,10 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
                 //     orientedImage = decodedImage!;
                 // }
 
-                // // Save the corrected image to a file
-                // final pngImage = img.encodePng(orientedImage);
-                // final file = File('${image.path}.png');
-                // await file.writeAsBytes(pngImage);
+                // Save the corrected image to a file
+                final pngImage = img.encodePng(decodedImage!);//orientedImage);
+                final file = File('${image.path}.png');
+                await file.writeAsBytes(pngImage);
 
                 if (!context.mounted) return;
 
@@ -145,7 +142,7 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
                     builder: (context) => DisplayPictureScreen(
                       // Pass the automatically generated path to
                       // the DisplayPictureScreen widget.
-                      imagePath: image.path,
+                      imagePath: file.path,
                       leftSide: widget.leftSide,
                     ),
                   ),

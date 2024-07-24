@@ -67,8 +67,7 @@ flutter:
     - assets/enrollment_icon.png
     - assets/verification_icon.png
     - assets/identification_icon.png
-    - assets/fingerprint_overlay_1.png
-    - assets/fingerprint_overlay_2.png
+    - assets/fingerprint_overlay.png
     
   #   - images/a_dot_ham.jpeg
 

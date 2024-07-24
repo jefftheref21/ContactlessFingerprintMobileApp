@@ -7,6 +7,7 @@ import 'package:fingerprint/models/user.dart';
 
 import 'dart:io';
 import 'dart:convert';
+import 'dart:typed_data';
 
 class VerificationScanPage extends StatefulWidget {
   const VerificationScanPage({
@@ -164,6 +165,19 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                 var rightPred = result['right_pred'];
                 var leftSimList = result['left_sim_list'];
                 var rightSimList = result['right_sim_list'];
+                final String leftBbox1 = result['left_bbox1'];
+                // final String rightBbox1 = result['right_bbox1'];
+                // final String leftBbox2 = result['left_bbox2'];
+                // final String rightBbox2 = result['right_bbox2'];
+
+                Uint8List? _imageBytes1;
+                _imageBytes1 = base64Decode(leftBbox1);
+                // Uint8List? _imageBytes2;
+                // _imageBytes2 = base64Decode(rightBbox1);
+                // Uint8List? _imageBytes3;
+                // _imageBytes3 = base64Decode(leftBbox2);
+                // Uint8List? _imageBytes4;
+                // _imageBytes4 = base64Decode(rightBbox2);
 
                 leftScore = double.parse(leftScore.toStringAsFixed(4));
                 rightScore = double.parse(rightScore.toStringAsFixed(4));
@@ -184,6 +198,10 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                         rightPred: rightPred,
                         leftSimList: leftSimList,
                         rightSimList: rightSimList,
+                        leftBbox1: _imageBytes1,
+                        // rightBbox1: _imageBytes2,
+                        // leftBbox2: _imageBytes3,
+                        // rightBbox2: _imageBytes4,
                       ),
                     ),
                   );

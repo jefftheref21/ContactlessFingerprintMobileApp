@@ -27,6 +27,7 @@ class Biometrics extends StatelessWidget {
     ]);
     return MaterialApp(
       title: 'Biometrics',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           elevation: 2,

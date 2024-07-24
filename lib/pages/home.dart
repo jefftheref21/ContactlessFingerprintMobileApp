@@ -47,6 +47,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text(pages[tab]["title"]),
         centerTitle: true,
+        
       ),
       body: pages[tab]["page"],
       // Set the bottom navigation bar.

@@ -13,6 +13,8 @@ class MyColors {
   static const Color townsendGray = Color(0xff666666);
 }
 
+Image overlay = Image.asset("assets/fingerprint_overlay.png");
+
 // Icons used in the app
 class MyIcons {
   static const ImageIcon verificationIcon = ImageIcon(AssetImage("assets/verification_icon.png"), color: MyColors.harrimanBlue,  size: 140);

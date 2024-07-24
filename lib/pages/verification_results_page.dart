@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:fingerprint/models/user.dart';
 import 'package:fingerprint/constants.dart';
+import 'dart:typed_data';
 
 class VerificationResultsPage extends StatefulWidget {
   const VerificationResultsPage({
@@ -13,6 +14,10 @@ class VerificationResultsPage extends StatefulWidget {
     required this.rightPred,
     required this.leftSimList,
     required this.rightSimList,
+    required this.leftBbox1,
+    // required this.rightBbox1,
+    // required this.leftBbox2,
+    // required this.rightBbox2,
   });
 
   final User user;
@@ -22,6 +27,10 @@ class VerificationResultsPage extends StatefulWidget {
   final String rightPred;
   final List<dynamic> leftSimList;
   final List<dynamic> rightSimList;
+  final Uint8List? leftBbox1;
+  // final Uint8List? rightBbox1;
+  // final Uint8List? leftBbox2;
+  // final Uint8List? rightBbox2;
 
   @override
   State<VerificationResultsPage> createState() => _VerificationResultsPageState();
@@ -195,10 +204,43 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
               ),
             ]
           ),
-          Row(
-            children: <Widget>[
-
-            ],
+          SingleChildScrollView(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    color: MyColors.lakeLaselle,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        const Text(
+                          'Enrolled Fingerprint',
+                          style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16),
+                        ),
+                        Image.memory(widget.leftBbox1!, width: 240, height: 320),
+                        Image.memory(widget.leftBbox1!, width: 240, height: 320),
+                      ]
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: MyColors.niagaraWhirlpool,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        const Text(
+                          'Inputted Fingerprint',
+                          style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint, fontSize: 16),
+                        ),
+                        Image.memory(widget.leftBbox1!, width: 240, height: 320),
+                        Image.memory(widget.leftBbox1!, width: 240, height: 320),
+                      ]
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Center(
             child: Text("test"),

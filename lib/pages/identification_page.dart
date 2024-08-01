@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:fingerprint/pages/identification_results_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fingerprint/pages/camera_page.dart';
@@ -151,7 +152,7 @@ class _IdentifierPageState extends State<IdentificationPage> {
                 return;
               }
 
-              Navigator.push(context, MaterialPageRoute(builder: (context) => LoadingPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoadingPage()));
 
               final response = await identifyFingerprint(widget.uri, fingerprintPath, leftSide ? "left" : "right");
 
@@ -159,18 +160,24 @@ class _IdentifierPageState extends State<IdentificationPage> {
               Navigator.pop(context);
 
               if (response.statusCode != 200) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Identification failed.'),
-                      ),
-                    );
-                  return;
-                }
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Identification failed.'),
+                  ),
+                );
+                return;
+              }
+
+              final responseBody = await response.stream.bytesToString();
+              final result = json.decode(responseBody);
+
+              var score = result['score'];
+              var username = result['username'];
 
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => IdentificationResultsPage(username: "ASDF", score: 0.0),
+                  builder: (context) => IdentificationResultsPage(username: username, score: score),
                 ),
               );
             },

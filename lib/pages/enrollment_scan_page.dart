@@ -6,6 +6,7 @@ import 'package:fingerprint/network_call.dart';
 
 import 'package:fingerprint/models/user.dart';
 import 'package:fingerprint/pages/enrollment_state_page.dart';
+import 'package:fingerprint/pages/loading_page.dart';
 import 'package:fingerprint/constants.dart';
 
 class EnrollmentScanPage extends StatefulWidget {
@@ -74,6 +75,7 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
                         builder: (context) {
                           return const CameraPage(
                             title: "Left Hand Scan",
+                            leftSide: true,
                           );
                         },
                       ),
@@ -127,29 +129,29 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
                   return;
                 }
 
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoadingPage()));
                 final result = await enrollUser(widget.uri, widget.user);
 
-                if (result != 200) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Enrollment failed.'),
-                      ),
-                    );
-                  }
-                  
-                }
+                if (!context.mounted) return;
+                Navigator.pop(context);
 
-                if (context.mounted) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return EnrollmentStatePage(user: widget.user);
-                      },
+                if (result != 200) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Enrollment failed.'),
                     ),
                   );
+                  return;
                 }
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return EnrollmentStatePage(user: widget.user);
+                    },
+                  ),
+                );
               },
               child: const Text('Complete Enrollment'),
             ),

@@ -81,3 +81,17 @@ verifyFingerprints(String uri, User user, String enrolled1, String enrolled2) as
   // }
   return response;
 }
+
+identifyFingerprint(String uri, String fingerprintPath, String type) async {
+  File file = File(fingerprintPath);
+  var stream = http.ByteStream(DelegatingStream(file.openRead()));
+  var length = await file.length();
+  var request = http.MultipartRequest("POST", Uri.parse(uri));
+  var image = http.MultipartFile('file', stream, length, filename: basename(file.path));
+
+  request.files.add(image);
+  request.fields['type'] = type;
+
+  final response = await request.send();
+  return response;
+}

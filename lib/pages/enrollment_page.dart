@@ -8,13 +8,16 @@ class EnrollmentPage extends StatefulWidget {
   const EnrollmentPage({
     super.key, 
     required this.uri,
+    required this.title,
   });
 
   final String uri;
+  final String title;
 
   @override
   State<EnrollmentPage> createState() => _EnrollmentPageState();
 }
+
 
 class _EnrollmentPageState extends State<EnrollmentPage>{
   TextEditingController usernameController = TextEditingController();
@@ -23,6 +26,11 @@ class _EnrollmentPageState extends State<EnrollmentPage>{
   
   late bool passwordVisible;
   late User user;
+
+  
+  getTitle() {
+    return widget.title;
+  }
 
   @override
   void initState() {
@@ -47,7 +55,7 @@ class _EnrollmentPageState extends State<EnrollmentPage>{
                     borderRadius: BorderRadius.circular(40), 
                     border: Border.all(color: MyColors.bairdPoint)), 
                 child: const Icon( 
-                  Icons.person_rounded, 
+                  Icons.assignment_add, 
                   size: 80, 
                   color: MyColors.bairdPoint, 
                 ), 
@@ -147,36 +155,33 @@ class _EnrollmentPageState extends State<EnrollmentPage>{
 
                   user.username = usernameController.text;
                   user.password = passwordController.text;
-                  // Check if username is already taken
                   final check = await checkUsername(widget.uri, user.username);
+      
+                  if (!context.mounted) return;
                   if (check != 200) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Username is already taken.'),
-                        ),
-                      );
-                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Username is already taken.'),
+                      ),
+                    );
                     return;
                   }
 
                   usernameController.clear();
                   passwordController.clear();
 
-                  if (context.mounted) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return EnrollmentScanPage(
-                            uri: '${widget.uri}/scan',
-                            user: user,
-                          );
-                        },
-                      ),
-                    );
-                  }
-                },
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return EnrollmentScanPage(
+                          uri: '${widget.uri}/scan',
+                          user: user,
+                        );
+                      },
+                    ),
+                  );
+              },
                 child: const Text('Next'),
               ),
             ),

@@ -13,7 +13,7 @@ class CameraPage extends StatefulWidget {
   const CameraPage({
     super.key,
     required this.title,
-    this.leftSide = true,
+    required this.leftSide,
   });
 
   final String title;

@@ -11,9 +11,11 @@ class VerificationPage extends StatefulWidget {
   const VerificationPage({
     super.key,
     required this.uri,
+    required this.title,
   });
 
   final String uri;
+  final String title;
 
   @override
   State<VerificationPage> createState() => _VerificationPageState();

@@ -19,7 +19,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int tab = 0;
+  late PageController _pageController;
+  late int _selectedTab;
   List<BottomNavigationBarItem> appBarDestinations = [
     const BottomNavigationBarItem(
       icon: ImageIcon(AssetImage("assets/enrollment_icon.png"), color: MyColors.victorEBlue,  size: 40),
@@ -34,32 +35,53 @@ class _HomeState extends State<Home> {
       label: 'Identification',
     ),
   ];
+  // Add animations between different pages
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    _selectedTab = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List pages = [
-      {"page": EnrollmentPage(uri: "$baseUri/enrollment"), "title": "Enrollment"},
-      {"page": VerificationPage(uri: "$baseUri/verification"), "title": "Verification"},
-      {"page": IdentificationPage(), "title": "Identification"},
+    // final List pages = [
+    //   {"page": EnrollmentPage(uri: "$baseUri/enrollment"), "title": "Enrollment"},
+    //   {"page": VerificationPage(uri: "$baseUri/verification"), "title": "Verification"},
+    //   {"page": IdentificationPage(uri: "$baseUri/identification"), "title": "Identification"},
+    // ];
+
+    List<Widget> pages = [
+      EnrollmentPage(uri: "$baseUri/enrollment", title: "Enrollment"),
+      VerificationPage(uri: "$baseUri/verification"),
+      IdentificationPage(uri: "$baseUri/identification"),
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(pages[tab]["title"]),
+        title: Text(pages[_selectedTab].getTitle()),
         centerTitle: true,
         
       ),
-      body: pages[tab]["page"],
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (int tab) {
+          setState(() => _selectedTab = tab);
+        },
+        children: pages,
+      ),
       // Set the bottom navigation bar.
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: tab,
-        onTap: (int index) {
+        currentIndex: _selectedTab,
+        onTap: (int tab) {
           setState(() {
-            tab = index;
+            _selectedTab = tab;
+            _pageController.animateToPage(tab, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
           });
         },
         items: appBarDestinations
-      ),
+      ),  
     );
   }
 }

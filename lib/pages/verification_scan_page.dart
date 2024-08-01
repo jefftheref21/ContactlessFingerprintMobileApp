@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fingerprint/constants.dart';
 import 'package:fingerprint/pages/camera_page.dart';
 import 'package:fingerprint/models/user.dart';
+import 'package:fingerprint/pages/loading_page.dart';
 
 import 'dart:io';
 import 'dart:convert';
@@ -88,6 +89,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                         builder: (context) {
                           return const CameraPage(
                             title: "First Scan",
+                            leftSide: true,
                           );
                         },
                       ),
@@ -141,18 +143,21 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                   return;
                 }
 
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoadingPage()));
+
                 print(widget.user.leftFingerprintPath);
 
                 final response = await verifyFingerprints(widget.uri, widget.user, enrolled1, enrolled2);
 
+                if (!context.mounted) return;
+                Navigator.pop(context);
+
                 if (response.statusCode != 200) {
-                  if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Verification failed.'),
                       ),
                     );
-                  }
                   return;
                 }
 

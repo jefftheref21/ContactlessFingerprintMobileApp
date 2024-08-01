@@ -54,13 +54,13 @@ class _HomeState extends State<Home> {
 
     List<Widget> pages = [
       EnrollmentPage(uri: "$baseUri/enrollment", title: "Enrollment"),
-      VerificationPage(uri: "$baseUri/verification"),
-      IdentificationPage(uri: "$baseUri/identification"),
+      VerificationPage(uri: "$baseUri/verification", title: "Verification"),
+      IdentificationPage(uri: "$baseUri/identification", title: "Identification"),
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(pages[_selectedTab].getTitle()),
+        title: Text((pages[_selectedTab] as dynamic).title),
         centerTitle: true,
         
       ),

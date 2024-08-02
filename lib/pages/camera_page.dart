@@ -131,7 +131,7 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
 
                 // Save the corrected image to a file
                 final pngImage = img.encodePng(decodedImage!);//orientedImage);
-                final file = File('${image.path}.png');
+                final file = File(image.path.replaceAll("jpg", "png"));
                 await file.writeAsBytes(pngImage);
 
                 if (!context.mounted) return;

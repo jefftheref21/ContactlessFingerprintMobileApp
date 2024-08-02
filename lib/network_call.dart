@@ -35,9 +35,11 @@ enrollUser(String uri, User user) async {
 
   final response = await request.send();
   print(response.statusCode);
-  var body = await response.stream.bytesToString();
-  var jsonResponse = json.decode(body);
-  print(jsonResponse['message']);
+  if (response.statusCode == 200) {
+    var body = await response.stream.bytesToString();
+    var jsonResponse = json.decode(body);
+    print(jsonResponse['message']);
+  }
   return response.statusCode;
 }
 
@@ -66,19 +68,12 @@ verifyFingerprints(String uri, User user, String enrolled1, String enrolled2) as
 
   request.fields['enrolled1'] = enrolled1;
   request.fields['enrolled2'] = enrolled2;
+  request.fields['username'] = user.username;
   request.files.add(leftImage);
   request.files.add(rightImage);
 
   final response = await request.send();
   print(response.statusCode);
-
-  // if (response.statusCode == 200) {
-  //   final responseBody = await response.stream.bytesToString();
-  //   final jsonResponse = json.decode(responseBody);
-  //   print("SCORE: ${jsonResponse['left_score']}");
-  // } else {
-  //   print('Request failed with status: ${response.statusCode}');
-  // }
   return response;
 }
 
@@ -93,5 +88,6 @@ identifyFingerprint(String uri, String fingerprintPath, String type) async {
   request.fields['type'] = type;
 
   final response = await request.send();
+  print(response.statusCode);
   return response;
 }

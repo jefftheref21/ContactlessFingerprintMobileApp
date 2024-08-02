@@ -28,8 +28,12 @@ enum Mode { distal, setBased, fourFingers }
 class _IdentifierPageState extends State<IdentificationPage> {
   late Mode defaultMode;
   late String fingerprintPath;
+
   late bool scanComplete;
   late bool leftSide;
+
+  late String username;
+  late double score;
 
   @override
   void initState() {
@@ -155,11 +159,12 @@ class _IdentifierPageState extends State<IdentificationPage> {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const LoadingPage()));
 
               final response = await identifyFingerprint(widget.uri, fingerprintPath, leftSide ? "left" : "right");
+              final int status = response.statusCode;
 
               if (!context.mounted) return;
               Navigator.pop(context);
 
-              if (response.statusCode != 200) {
+              if (status != 200 || status != 204) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Identification failed.'),
@@ -168,16 +173,24 @@ class _IdentifierPageState extends State<IdentificationPage> {
                 return;
               }
 
-              final responseBody = await response.stream.bytesToString();
-              final result = json.decode(responseBody);
+              bool successful = false;
+              if (status == 200) {
+                final responseBody = await response.stream.bytesToString();
+                final result = json.decode(responseBody);
 
-              var score = result['score'];
-              var username = result['username'];
+                score = result['score'];
+                username = result['username'];
 
+                score = double.parse(score.toStringAsFixed(4));
+
+                successful = true;
+              }
+
+              if (!context.mounted) return;
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => IdentificationResultsPage(username: username, score: score),
+                  builder: (context) => IdentificationResultsPage(matchFound: successful, username: username, score: score),
                 ),
               );
             },

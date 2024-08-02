@@ -14,7 +14,7 @@ class VerificationResultsPage extends StatefulWidget {
     required this.rightPred,
     required this.leftSimList,
     required this.rightSimList,
-    required this.leftBbox1,
+    // required this.leftBbox1,
     // required this.rightBbox1,
     // required this.leftBbox2,
     // required this.rightBbox2,
@@ -27,7 +27,7 @@ class VerificationResultsPage extends StatefulWidget {
   final String rightPred;
   final List<dynamic> leftSimList;
   final List<dynamic> rightSimList;
-  final Uint8List? leftBbox1;
+  // final Uint8List? leftBbox1;
   // final Uint8List? rightBbox1;
   // final Uint8List? leftBbox2;
   // final Uint8List? rightBbox2;
@@ -217,8 +217,8 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                           'Enrolled Fingerprint',
                           style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16),
                         ),
-                        Image.memory(widget.leftBbox1!, width: 240, height: 320),
-                        Image.memory(widget.leftBbox1!, width: 240, height: 320),
+                        // Image.memory(widget.leftBbox1!, width: 240, height: 320),
+                        // Image.memory(widget.leftBbox1!, width: 240, height: 320),
                       ]
                     ),
                   ),
@@ -233,8 +233,8 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                           'Inputted Fingerprint',
                           style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint, fontSize: 16),
                         ),
-                        Image.memory(widget.leftBbox1!, width: 240, height: 320),
-                        Image.memory(widget.leftBbox1!, width: 240, height: 320),
+                        // Image.memory(widget.leftBbox1!, width: 240, height: 320),
+                        // Image.memory(widget.leftBbox1!, width: 240, height: 320),
                       ]
                     ),
                   ),

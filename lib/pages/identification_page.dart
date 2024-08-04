@@ -145,6 +145,7 @@ class _IdentifierPageState extends State<IdentificationPage> {
             },
             child: const Text('Scan'),
           ),
+          scanComplete ? Image.file(File(fingerprintPath), width: 150, height: 200) : MyIcons.verificationIcon,
           ElevatedButton(
             onPressed: () async {
               if (scanComplete == false) {

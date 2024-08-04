@@ -7,6 +7,7 @@ import "package:fingerprint/main.dart";
 import 'package:image/image.dart' as img;
 
 import 'package:fingerprint/constants.dart';
+import 'package:fingerprint/pages/loading_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({
@@ -85,7 +86,7 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
             );
           } else {
             // Otherwise, display a loading indicator.
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingPage();
           }
         },
       ),

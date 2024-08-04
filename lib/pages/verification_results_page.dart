@@ -241,13 +241,15 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.all(10.0),
             child: Column(
-              children: [
+              children: <Widget>[
+                const Text("Left Hand", style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint, fontSize: 16)),
                 Expanded(
                   child: Container(
                     color: MyColors.lakeLaselle,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
+                        const Text('Enrolled', style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16)),
                         for (var enh in widget.results.leftEnrEnh) 
                           Padding(
                             padding: const EdgeInsets.all(15.0),
@@ -263,6 +265,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
+                        const Text('Input', style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16)),
                         for (var enh in widget.results.leftInpEnh) 
                           Padding(
                             padding: const EdgeInsets.all(15.0),
@@ -279,6 +282,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
+                        const Text('Enrolled', style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16)),
                         for (var enh in widget.results.rightEnrEnh)
                           Padding(
                             padding: const EdgeInsets.all(15.0),
@@ -294,6 +298,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
+                        const Text('Input', style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16)),
                         for (var enh in widget.results.rightInpEnh)
                           Padding(
                             padding: const EdgeInsets.all(15.0),

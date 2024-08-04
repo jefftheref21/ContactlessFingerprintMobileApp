@@ -1,16 +1,12 @@
-# fingerprint
+# Fingerprint Mobile App
 
-A new Flutter project.
+This repository contains the UI of a fingerprint mobile app that enrolls, verifies, and identifies
+different fingerprints.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Make sure to have flutter installed. You can install through VSCode or your local machine.
+Then, run flutter pub get to resolve all the dependencies.
+Depending on whether you want to test on an ios or android device, then you also need to download Android Studio or XCode.
+Then, simply run flutter run in the terminal.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

@@ -5,7 +5,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import "package:fingerprint/main.dart";
 import 'package:image/image.dart' as img;
-import 'package:exif/exif.dart';
 
 import 'package:fingerprint/constants.dart';
 
@@ -107,27 +106,9 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
                 // where it was saved.
                 final image = await _controller.takePicture();
                 final imageBytes = await image.readAsBytes();
-                final exifData = await readExifFromBytes(imageBytes);
-                final orientation = exifData!['Image Orientation']?.values?.first ?? 1;
 
                 // Decode the image
                 final decodedImage = img.decodeImage(imageBytes);
-
-                // Correct the orientation
-                // img.Image orientedImage;
-                // switch (orientation) {
-                //   case 3:
-                //     orientedImage = img.copyRotate(decodedImage!, 180);
-                //     break;
-                //   case 6:
-                //     orientedImage = img.copyRotate(decodedImage!, 90);
-                //     break;
-                //   case 8:
-                //     orientedImage = img.copyRotate(decodedImage!, -90);
-                //     break;
-                //   default:
-                //     orientedImage = decodedImage!;
-                // }
 
                 // Save the corrected image to a file
                 final pngImage = img.encodePng(decodedImage!);//orientedImage);

@@ -174,6 +174,10 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                   rightPred: result['right_pred'],
                   leftSimList: result['left_sim_list'],
                   rightSimList: result['right_sim_list'],
+                  leftEnrEnh: [],
+                  rightEnrEnh: [],
+                  leftInpEnh: [],
+                  rightInpEnh: [],
                 );
 
                 final Uint8List zipBytes = base64Decode(result['zip_file']);
@@ -223,7 +227,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                 Navigator.pop(context);
                 
                 fullResults.roundScores();
-                fullResults.orderFingerprints();
+                // fullResults.orderFingerprints();
 
                 Navigator.push(
                   context,

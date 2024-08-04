@@ -27,10 +27,10 @@ class Results {
     this.rightEnrBbox,
     this.leftInpBbox,
     this.rightInpBbox,
-    this.leftEnrEnh = const [],
-    this.rightEnrEnh = const [],
-    this.leftInpEnh = const [],
-    this.rightInpEnh = const [],
+    required this.leftEnrEnh,
+    required this.rightEnrEnh,
+    required this.leftInpEnh,
+    required this.rightInpEnh,
   });
 
   void roundScores() {

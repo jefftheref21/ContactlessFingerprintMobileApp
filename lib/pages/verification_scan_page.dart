@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:fingerprint/constants.dart';
 import 'package:fingerprint/pages/camera_page.dart';
 import 'package:fingerprint/models/user.dart';
+import 'package:fingerprint/models/full_results.dart';
 import 'package:fingerprint/pages/loading_page.dart';
 
 import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
+
+import 'package:path_provider/path_provider.dart'; // For directory paths
+import 'package:archive/archive.dart'; 
+
 
 class VerificationScanPage extends StatefulWidget {
   const VerificationScanPage({
@@ -150,8 +155,6 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                 final response = await verifyFingerprints(widget.uri, widget.user, enrolled1, enrolled2);
 
                 if (!context.mounted) return;
-                Navigator.pop(context);
-
                 if (response.statusCode != 200) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -164,49 +167,69 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                 final responseBody = await response.stream.bytesToString();
                 final result = json.decode(responseBody);
 
-                var leftScore = result['left_score'];
-                var rightScore = result['right_score'];
-                var leftPred = result['left_pred'];
-                var rightPred = result['right_pred'];
-                var leftSimList = result['left_sim_list'];
-                var rightSimList = result['right_sim_list'];
-                // final String leftBbox1 = result['left_bbox1'];
-                // final String rightBbox1 = result['right_bbox1'];
-                // final String leftBbox2 = result['left_bbox2'];
-                // final String rightBbox2 = result['right_bbox2'];
+                Results fullResults = Results(
+                  leftScore: result['left_score'],
+                  rightScore: result['right_score'],
+                  leftPred: result['left_pred'],
+                  rightPred: result['right_pred'],
+                  leftSimList: result['left_sim_list'],
+                  rightSimList: result['right_sim_list'],
+                );
 
-                // Uint8List? _imageBytes1;
-                // _imageBytes1 = base64Decode(leftBbox1);
-                // Uint8List? _imageBytes2;
-                // _imageBytes2 = base64Decode(rightBbox1);
-                // Uint8List? _imageBytes3;
-                // _imageBytes3 = base64Decode(leftBbox2);
-                // Uint8List? _imageBytes4;
-                // _imageBytes4 = base64Decode(rightBbox2);
+                final Uint8List zipBytes = base64Decode(result);
 
-                leftScore = double.parse(leftScore.toStringAsFixed(4));
-                rightScore = double.parse(rightScore.toStringAsFixed(4));
-                for (var i = 0; i < 4; i++) {
-                  leftSimList[i] = double.parse(leftSimList[i].toStringAsFixed(4));
-                  rightSimList[i] = double.parse(rightSimList[i].toStringAsFixed(4));
+                final Archive archive = ZipDecoder().decodeBytes(zipBytes);
+
+                final Directory tempDir = await getTemporaryDirectory();
+                final String tempPath = tempDir.path;
+
+                for (final ArchiveFile file in archive) {
+                  if (file.isFile) {
+                    final String filename = file.name;
+                    final String filePath = '$tempPath/$filename';
+                    final File outputFile = File(filePath);
+
+                    await outputFile.writeAsBytes(file.content as List<int>);
+
+                    if (filename == 'left_enr_bbox.jpg') {
+                      fullResults.leftEnrBbox = outputFile;
+                    }
+                    else if (filename == 'right_enr_bbox.jpg') {
+                      fullResults.rightEnrBbox = outputFile;
+                    }
+                    else if (filename == 'left_inp_bbox.jpg') {
+                      fullResults.leftInpBbox = outputFile;
+                    }
+                    else if (filename == 'right_inp_bbox.jpg') {
+                      fullResults.rightInpBbox = outputFile;
+                    }
+                    else if (filename.startsWith('left_enr_enh')) {
+                      fullResults.leftEnrEnh.add(outputFile);
+                    }
+                    else if (filename.startsWith('right_enr_enh')) {
+                      fullResults.rightEnrEnh.add(outputFile);
+                    }
+                    else if (filename.startsWith('left_inp_enh')) {
+                      fullResults.leftInpEnh.add(outputFile);
+                    }
+                    else if (filename.startsWith('right_inp_enh')) {
+                      fullResults.rightInpEnh.add(outputFile);
+                    }
+                  }
                 }
-
+                
                 if (!context.mounted) return;
+                Navigator.pop(context);
+                
+                fullResults.roundScores();
+                fullResults.orderFingerprints();
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => VerificationResultsPage(
                       user: widget.user,
-                      leftScore: leftScore,
-                      rightScore: rightScore,
-                      leftPred: leftPred,
-                      rightPred: rightPred,
-                      leftSimList: leftSimList,
-                      rightSimList: rightSimList,
-                      // leftBbox1: _imageBytes1,
-                      // rightBbox1: _imageBytes2,
-                      // leftBbox2: _imageBytes3,
-                      // rightBbox2: _imageBytes4,
+                      results: fullResults
                     ),
                   ),
                 );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:fingerprint/models/user.dart';
+import 'package:fingerprint/models/full_results.dart';
 import 'package:fingerprint/constants.dart';
 import 'dart:typed_data';
 
@@ -8,29 +9,11 @@ class VerificationResultsPage extends StatefulWidget {
   const VerificationResultsPage({
     super.key,
     required this.user,
-    required this.leftScore,
-    required this.rightScore,
-    required this.leftPred,
-    required this.rightPred,
-    required this.leftSimList,
-    required this.rightSimList,
-    // required this.leftBbox1,
-    // required this.rightBbox1,
-    // required this.leftBbox2,
-    // required this.rightBbox2,
+    required this.results,
   });
 
   final User user;
-  final double leftScore;
-  final double rightScore;
-  final String leftPred;
-  final String rightPred;
-  final List<dynamic> leftSimList;
-  final List<dynamic> rightSimList;
-  // final Uint8List? leftBbox1;
-  // final Uint8List? rightBbox1;
-  // final Uint8List? leftBbox2;
-  // final Uint8List? rightBbox2;
+  final Results results;
 
   @override
   State<VerificationResultsPage> createState() => _VerificationResultsPageState();
@@ -104,7 +87,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                         style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16),
                       ),
                       const SizedBox(height: 20),
-                      Text("${widget.leftScore}",
+                      Text("${widget.results.leftScore}",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -112,7 +95,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Text(widget.leftPred,
+                      Text(widget.results.leftPred,
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -121,7 +104,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                       ),
                       const SizedBox(height: 20),
                       const Text(""), // Placeholder for spacing
-                      for (double i in widget.leftSimList) Text("$i", style: const TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool)),
+                      for (double i in widget.results.leftSimList) Text("$i", style: const TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool)),
                     ]
                   ),
                 ),
@@ -180,7 +163,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                         style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16),
                       ),
                       const SizedBox(height: 20),
-                      Text("${widget.rightScore}",
+                      Text("${widget.results.rightScore}",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -188,7 +171,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Text(widget.rightPred,
+                      Text(widget.results.rightPred,
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -197,7 +180,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                       ),
                       const SizedBox(height: 20),
                       const Text(""), // Placeholder for spacing
-                      for (double i in widget.rightSimList) Text("$i", style: const TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool)),
+                      for (double i in widget.results.rightSimList) Text("$i", style: const TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool)),
                     ]
                   ),
                 ),
@@ -217,8 +200,8 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                           'Enrolled Fingerprint',
                           style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16),
                         ),
-                        // Image.memory(widget.leftBbox1!, width: 240, height: 320),
-                        // Image.memory(widget.leftBbox1!, width: 240, height: 320),
+                        Image.file(widget.results.leftEnrBbox!, width: 240, height: 240),
+                        Image.file(widget.results.rightEnrBbox!, width: 240, height: 240),
                       ]
                     ),
                   ),
@@ -233,8 +216,8 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                           'Inputted Fingerprint',
                           style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint, fontSize: 16),
                         ),
-                        // Image.memory(widget.leftBbox1!, width: 240, height: 320),
-                        // Image.memory(widget.leftBbox1!, width: 240, height: 320),
+                        Image.file(widget.results.leftInpBbox!, width: 240, height: 240),
+                        Image.file(widget.results.rightInpBbox!, width: 240, height: 240),
                       ]
                     ),
                   ),
@@ -242,9 +225,59 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
               ],
             ),
           ),
-          Center(
-            child: Text("test"),
-          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                const Text("Left Hand", style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint, fontSize: 16)),
+                Expanded(
+                  child: Container(
+                    color: MyColors.lakeLaselle,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        for (var enh in widget.results.leftEnrEnh) Image.file(enh, width: 60, height: 60),
+                      ]
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: MyColors.niagaraWhirlpool,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        for (var enh in widget.results.leftInpEnh) Image.file(enh, width: 60, height: 60),
+                      ]
+                    ),
+                  ),
+                ),
+                const Text("Right Hand", style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint, fontSize: 16)),
+                Expanded(
+                  child: Container(
+                    color: MyColors.lakeLaselle,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        for (var enh in widget.results.rightEnrEnh) Image.file(enh, width: 60, height: 60),
+                      ]
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: MyColors.niagaraWhirlpool,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        for (var enh in widget.results.rightInpEnh) Image.file(enh, width: 60, height: 60),
+                      ]
+                    ),
+                  ),
+                )
+              ],)
+          )
         ],
       )
     );

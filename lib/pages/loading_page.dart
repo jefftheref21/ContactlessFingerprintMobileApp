@@ -16,6 +16,7 @@ class _LoadingPageState extends State<LoadingPage> {
     return const Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation(MyColors.harrimanBlue),
@@ -25,6 +26,7 @@ class _LoadingPageState extends State<LoadingPage> {
             'Please wait...',
             style: TextStyle(
               fontSize: 30,
+              color: MyColors.harrimanBlue,
             ),
           ),
         ],

@@ -44,7 +44,7 @@ enrollUser(String uri, User user) async {
 }
 
 checkCredentials(String uri, User user) async {
-  final headers = {'Content-Type': 'application/json'};
+  final headers = {'Content-Type': 'Authorization'};
   Map<String, dynamic> request = {'username': user.username, 'password': user.password};
   final response = await http.post(Uri.parse(uri), headers: headers, body: json.encode(request));
   print(response.statusCode);
@@ -68,7 +68,6 @@ verifyFingerprints(String uri, User user, String enrolled1, String enrolled2) as
 
   request.fields['enrolled1'] = enrolled1;
   request.fields['enrolled2'] = enrolled2;
-  request.fields['username'] = user.username;
   request.files.add(leftImage);
   request.files.add(rightImage);
 

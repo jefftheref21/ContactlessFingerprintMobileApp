@@ -44,7 +44,7 @@ enrollUser(String uri, User user) async {
 }
 
 checkCredentials(String uri, User user) async {
-  final headers = {'Content-Type': 'Authorization'};
+  final headers = {'Content-Type': 'application/json'};
   Map<String, dynamic> request = {'username': user.username, 'password': user.password};
   final response = await http.post(Uri.parse(uri), headers: headers, body: json.encode(request));
   print(response.statusCode);

@@ -129,7 +129,7 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
                   return;
                 }
 
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoadingPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoadingPage()));
                 final result = await enrollUser(widget.uri, widget.user);
 
                 if (!context.mounted) return;

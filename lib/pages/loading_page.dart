@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:fingerprint/constants.dart';
 
 class LoadingPage extends StatefulWidget {
-  const LoadingPage({
+  LoadingPage({
     super.key,
+    this.message = "Please wait...",
   });
+
+  String message;
 
   @override
   State<LoadingPage> createState() => _LoadingPageState();
@@ -13,18 +16,18 @@ class LoadingPage extends StatefulWidget {
 class _LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          CircularProgressIndicator(
+          const CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation(MyColors.harrimanBlue),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Text(
-            'Please wait...',
-            style: TextStyle(
+            widget.message,
+            style: const TextStyle(
               fontSize: 30,
               color: MyColors.harrimanBlue,
             ),

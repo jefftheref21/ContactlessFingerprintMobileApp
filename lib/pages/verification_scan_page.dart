@@ -148,7 +148,9 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                   return;
                 }
 
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoadingPage()));
+                LoadingPage lp = LoadingPage();
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => lp));
 
                 print(widget.user.leftFingerprintPath);
 
@@ -167,6 +169,8 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                 final responseBody = await response.stream.bytesToString();
                 final result = json.decode(responseBody);
 
+                lp.message = 'Compiling Images...';
+
                 Results fullResults = Results(
                   leftScore: result['left_score'],
                   rightScore: result['right_score'],
@@ -176,7 +180,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                   rightSimList: result['right_sim_list'],
                 );
 
-                final Uint8List zipBytes = base64Decode(result);
+                final Uint8List zipBytes = base64Decode(result['zip_file']);
 
                 final Archive archive = ZipDecoder().decodeBytes(zipBytes);
 
@@ -215,6 +219,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                     else if (filename.startsWith('right_inp_enh')) {
                       fullResults.rightInpEnh.add(outputFile);
                     }
+                    print("File saved to $filePath");
                   }
                 }
                 

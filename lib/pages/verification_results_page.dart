@@ -200,8 +200,14 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                           'Enrolled Fingerprint',
                           style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16),
                         ),
-                        Image.file(widget.results.leftEnrBbox!, width: 240, height: 240),
-                        Image.file(widget.results.rightEnrBbox!, width: 240, height: 240),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          child: Image.file(widget.results.leftEnrBbox!, width: 240, height: 240)
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          child: Image.file(widget.results.rightEnrBbox!, width: 240, height: 240)
+                        ),
                       ]
                     ),
                   ),
@@ -216,8 +222,14 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                           'Inputted Fingerprint',
                           style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint, fontSize: 16),
                         ),
-                        Image.file(widget.results.leftInpBbox!, width: 240, height: 240),
-                        Image.file(widget.results.rightInpBbox!, width: 240, height: 240),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          child: Image.file(widget.results.leftInpBbox!, width: 240, height: 240)
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          child: Image.file(widget.results.rightInpBbox!, width: 240, height: 240)
+                        ),
                       ]
                     ),
                   ),
@@ -230,14 +242,17 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
             padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
-                const Text("Left Hand", style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint, fontSize: 16)),
                 Expanded(
                   child: Container(
                     color: MyColors.lakeLaselle,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        for (var enh in widget.results.leftEnrEnh) Image.file(enh, width: 60, height: 60),
+                        for (var enh in widget.results.leftEnrEnh) 
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Image.file(enh, width: 90, height: 120),
+                          ),
                       ]
                     ),
                   ),
@@ -248,7 +263,11 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        for (var enh in widget.results.leftInpEnh) Image.file(enh, width: 60, height: 60),
+                        for (var enh in widget.results.leftInpEnh) 
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Image.file(enh, width: 90, height: 120),
+                          ),
                       ]
                     ),
                   ),
@@ -260,7 +279,11 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        for (var enh in widget.results.rightEnrEnh) Image.file(enh, width: 60, height: 60),
+                        for (var enh in widget.results.rightEnrEnh)
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Image.file(enh, width: 90, height: 120),
+                          ),
                       ]
                     ),
                   ),
@@ -271,7 +294,11 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        for (var enh in widget.results.rightInpEnh) Image.file(enh, width: 60, height: 60),
+                        for (var enh in widget.results.rightInpEnh)
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Image.file(enh, width: 90, height: 120)
+                          ),
                       ]
                     ),
                   ),

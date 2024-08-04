@@ -59,7 +59,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: EdgeInsets.only(left: 30.0),
+                padding: const EdgeInsets.only(left: 30.0),
                 child: Text(
                   'Welcome back ${widget.user.username},',
                   style: const TextStyle(
@@ -148,9 +148,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                   return;
                 }
 
-                LoadingPage lp = LoadingPage();
-
-                Navigator.push(context, MaterialPageRoute(builder: (context) => lp));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoadingPage()));
 
                 print(widget.user.leftFingerprintPath);
 
@@ -168,8 +166,6 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
 
                 final responseBody = await response.stream.bytesToString();
                 final result = json.decode(responseBody);
-
-                lp.message = 'Compiling Images...';
 
                 Results fullResults = Results(
                   leftScore: result['left_score'],

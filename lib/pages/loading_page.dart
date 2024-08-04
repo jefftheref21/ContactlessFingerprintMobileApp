@@ -2,18 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:fingerprint/constants.dart';
 
 class LoadingPage extends StatefulWidget {
-  LoadingPage({
+  const LoadingPage({
     super.key,
-    this.message = "Please wait...",
   });
-
-  String message;
 
   @override
   State<LoadingPage> createState() => _LoadingPageState();
 }
 
 class _LoadingPageState extends State<LoadingPage> {
+  late String? _message;
+
+  @override
+  void initState() {
+    super.initState();
+    _message = "Please wait...";
+  }
+
+  void updateMessage(String newMessage) {
+    setState(() {
+      _message = newMessage;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +37,7 @@ class _LoadingPageState extends State<LoadingPage> {
           ),
           const SizedBox(height: 20),
           Text(
-            widget.message,
+            _message!,
             style: const TextStyle(
               fontSize: 30,
               color: MyColors.harrimanBlue,

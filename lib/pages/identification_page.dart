@@ -145,7 +145,9 @@ class _IdentifierPageState extends State<IdentificationPage> {
             },
             child: const Text('Scan'),
           ),
+          const SizedBox(height: 20),
           scanComplete ? Image.file(File(fingerprintPath), width: 150, height: 200) : MyIcons.verificationIcon,
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
               if (scanComplete == false) {
@@ -165,7 +167,8 @@ class _IdentifierPageState extends State<IdentificationPage> {
               if (!context.mounted) return;
               Navigator.pop(context);
 
-              if (status != 200 || status != 204) {
+              // If status is not successful
+              if (status / 100 != 2) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Identification failed.'),
@@ -196,7 +199,8 @@ class _IdentifierPageState extends State<IdentificationPage> {
               );
             },
             child: const Text("Identify")
-          )
+          ),
+          const SizedBox(height: 60)
         ],
       ),
     );

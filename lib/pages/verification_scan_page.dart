@@ -30,6 +30,7 @@ class VerificationScanPage extends StatefulWidget {
 }
 
 class _VerificationScanPageState extends State<VerificationScanPage> {
+  final GlobalKey<LoadingPageState> _loadingScreenKey = GlobalKey<LoadingPageState>();
   late bool firstScanComplete;
   late bool secondScanComplete;
   late String enrolled1;
@@ -148,7 +149,9 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                   return;
                 }
 
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoadingPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoadingPage(
+                  key: _loadingScreenKey,
+                )));
 
                 print(widget.user.leftFingerprintPath);
 
@@ -227,7 +230,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                 Navigator.pop(context);
                 
                 fullResults.roundScores();
-                // fullResults.orderFingerprints();
+                fullResults.orderFingerprints();
 
                 Navigator.push(
                   context,
@@ -247,3 +250,43 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
     );
   }
 }
+
+// class _LoadingPageState extends State<LoadingPage> {
+//   late String? _message;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _message = "Please wait...";
+//   }
+
+//   void updateMessage(String newMessage) {
+//     setState(() {
+//       _message = newMessage;
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             const CircularProgressIndicator(
+//               valueColor: AlwaysStoppedAnimation(MyColors.harrimanBlue),
+//             ),
+//             const SizedBox(height: 20),
+//             Text(
+//               _message!,
+//               style: const TextStyle(
+//                 fontSize: 30,
+//                 color: MyColors.harrimanBlue,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -7,10 +7,10 @@ class LoadingPage extends StatefulWidget {
   });
 
   @override
-  State<LoadingPage> createState() => _LoadingPageState();
+  State<LoadingPage> createState() => LoadingPageState();
 }
 
-class _LoadingPageState extends State<LoadingPage> {
+class LoadingPageState extends State<LoadingPage> {
   late String? _message;
 
   @override
@@ -28,22 +28,23 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation(MyColors.harrimanBlue),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            _message!,
-            style: const TextStyle(
-              fontSize: 30,
-              color: MyColors.harrimanBlue,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(MyColors.harrimanBlue),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            Text(
+              _message!,
+              style: const TextStyle(
+                fontSize: 30,
+                color: MyColors.harrimanBlue,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

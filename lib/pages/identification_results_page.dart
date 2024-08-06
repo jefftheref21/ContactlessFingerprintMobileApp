@@ -24,7 +24,8 @@ class _IdentificationResultsPageState extends State<IdentificationResultsPage> {
       appBar: AppBar(
         title: const Text('Fingerprint Identification'),
       ),
-      body: Center(
+      body: widget.matchFound ?
+      Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -55,6 +56,21 @@ class _IdentificationResultsPageState extends State<IdentificationResultsPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Back to Home'),
+            ),
+          ],
+        ),
+      ) :
+      Center(
+        child: Column(
+          children: <Widget>[
+            const Text("No match found", style: TextStyle(fontSize: 30)),
+            const SizedBox(height: 20),
+            const Text("Make sure to enroll your fingerprints first.", style: TextStyle(fontSize: 18)),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);

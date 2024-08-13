@@ -20,4 +20,6 @@ class MyIcons {
   static const ImageIcon verificationIcon = ImageIcon(AssetImage("assets/verification_icon.png"), color: MyColors.harrimanBlue,  size: 140);
   static const ImageIcon enrollmentIcon = ImageIcon(AssetImage("assets/enrollment_icon.png"), color: MyColors.harrimanBlue,  size: 140);
   static const ImageIcon cameraIcon = ImageIcon(AssetImage("assets/camera_icon.png"), color: MyColors.harrimanBlue,  size: 140);
+  
+  static const List flashIcons = [Icons.flash_auto, Icons.flash_on, Icons.flash_off];
 }

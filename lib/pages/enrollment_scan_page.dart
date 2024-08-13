@@ -24,8 +24,16 @@ class EnrollmentScanPage extends StatefulWidget {
 }
 
 class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
-  bool firstScanComplete = false;
-  bool secondScanComplete = false;
+  late bool firstScanComplete;
+  late bool secondScanComplete;
+  final GlobalKey<LoadingPageState> _loadingScreenKey = GlobalKey<LoadingPageState>();
+
+  @override
+  void initState() {
+    super.initState();
+    firstScanComplete = false;
+    secondScanComplete = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +62,7 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 15.0, top: 30.0, right: 15.0),
+              padding: EdgeInsets.only(top: 30.0, bottom: 30.0, left: 15.0, right: 15.0),
               child: Text(
                 'Scan your fingerprints to enroll.',
                 style: TextStyle(
@@ -129,7 +137,12 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
                   return;
                 }
 
-                Navigator.push(context, MaterialPageRoute(builder: (context) => LoadingPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoadingPage(
+                  key: _loadingScreenKey,
+                  message: 'Enrolling...'))
+                );
+
+                _loadingScreenKey.currentState!.updateMessage("Saving embeddings...");
                 final result = await enrollUser(widget.uri, widget.user);
 
                 if (!context.mounted) return;

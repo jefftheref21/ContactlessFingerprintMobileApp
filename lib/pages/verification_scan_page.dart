@@ -35,6 +35,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
   late bool secondScanComplete;
   late String enrolled1;
   late String enrolled2;
+  late Directory tempDir;
 
   @override
   void initState() {
@@ -45,6 +46,12 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
     enrolled2 = widget.user.rightFingerprintPath;
     widget.user.leftFingerprintPath = '';
     widget.user.rightFingerprintPath = '';
+  }
+
+  @override
+  void dispose() {
+    tempDir.deleteSync(recursive: true);
+    super.dispose();
   }
 
   @override
@@ -151,11 +158,15 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
 
                 Navigator.push(context, MaterialPageRoute(builder: (context) => LoadingPage(
                   key: _loadingScreenKey,
+                  message: "Verifying...",
                 )));
 
-                print(widget.user.leftFingerprintPath);
+                await Future.delayed(const Duration(seconds: 5));
+                _loadingScreenKey.currentState?.updateMessage('Comparing embeddings...');
 
                 final response = await verifyFingerprints(widget.uri, widget.user, enrolled1, enrolled2);
+
+                _loadingScreenKey.currentState!.updateMessage("Processing results...");
 
                 if (!context.mounted) return;
                 if (response.statusCode != 200) {
@@ -184,10 +195,9 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                 );
 
                 final Uint8List zipBytes = base64Decode(result['zip_file']);
-
                 final Archive archive = ZipDecoder().decodeBytes(zipBytes);
 
-                final Directory tempDir = await getTemporaryDirectory();
+                tempDir = await getTemporaryDirectory();
                 final String tempPath = tempDir.path;
 
                 for (final ArchiveFile file in archive) {
@@ -222,7 +232,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                     else if (filename.startsWith('right_inp_enh')) {
                       fullResults.rightInpEnh.add(outputFile);
                     }
-                    print("File saved to $filePath");
+                    // print("File saved to $filePath");
                   }
                 }
                 
@@ -232,7 +242,7 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
                 fullResults.roundScores();
                 fullResults.orderFingerprints();
 
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) => VerificationResultsPage(
@@ -250,43 +260,3 @@ class _VerificationScanPageState extends State<VerificationScanPage> {
     );
   }
 }
-
-// class _LoadingPageState extends State<LoadingPage> {
-//   late String? _message;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _message = "Please wait...";
-//   }
-
-//   void updateMessage(String newMessage) {
-//     setState(() {
-//       _message = newMessage;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             const CircularProgressIndicator(
-//               valueColor: AlwaysStoppedAnimation(MyColors.harrimanBlue),
-//             ),
-//             const SizedBox(height: 20),
-//             Text(
-//               _message!,
-//               style: const TextStyle(
-//                 fontSize: 30,
-//                 color: MyColors.harrimanBlue,
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

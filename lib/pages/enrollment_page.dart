@@ -22,21 +22,24 @@ class EnrollmentPage extends StatefulWidget {
 class _EnrollmentPageState extends State<EnrollmentPage>{
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   
   late bool passwordVisible;
   late User user;
-
-  
-  getTitle() {
-    return widget.title;
-  }
 
   @override
   void initState() {
     super.initState();
     passwordVisible = false;
     user = User(username: '', password: '', leftFingerprintPath: '', rightFingerprintPath: '');
+  }
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    _formKey.currentState?.dispose();
+    super.dispose();
   }
 
   @override

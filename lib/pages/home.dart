@@ -35,8 +35,7 @@ class _HomeState extends State<Home> {
       label: 'Identification',
     ),
   ];
-  // Add animations between different pages
-
+  
   @override
   void initState() {
     super.initState();
@@ -46,12 +45,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // final List pages = [
-    //   {"page": EnrollmentPage(uri: "$baseUri/enrollment"), "title": "Enrollment"},
-    //   {"page": VerificationPage(uri: "$baseUri/verification"), "title": "Verification"},
-    //   {"page": IdentificationPage(uri: "$baseUri/identification"), "title": "Identification"},
-    // ];
-
     List<Widget> pages = [
       EnrollmentPage(uri: "$baseUri/enrollment", title: "Enrollment"),
       VerificationPage(uri: "$baseUri/verification", title: "Verification"),
@@ -77,7 +70,7 @@ class _HomeState extends State<Home> {
         onTap: (int tab) {
           setState(() {
             _selectedTab = tab;
-            _pageController.animateToPage(tab, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+            _pageController.animateToPage(tab, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
           });
         },
         items: appBarDestinations

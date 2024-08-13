@@ -159,7 +159,7 @@ class _IdentifierPageState extends State<IdentificationPage> {
                 return;
               }
 
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoadingPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoadingPage(message: "Identifying...")));
 
               final response = await identifyFingerprint(widget.uri, fingerprintPath, leftSide ? "left" : "right");
               final int status = response.statusCode;
@@ -176,6 +176,9 @@ class _IdentifierPageState extends State<IdentificationPage> {
                 );
                 return;
               }
+
+              scanComplete = false;
+              fingerprintPath = '';
 
               bool successful = false;
               if (status == 200) {

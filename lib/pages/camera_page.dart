@@ -27,10 +27,11 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
 
-  late FlashMode flashMode;
-  late int flashIndex = 0;
+  FlashMode flashMode = FlashMode.auto;
+  int flashIndex = 0;
 
-  List icons = [Icons.flash_auto, Icons.flash_off, Icons.flash_on];
+  Offset? _focusPoint;
+  double _currentZoom = 1.0;
 
   @override
   void initState() {
@@ -42,8 +43,6 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
       // Define the resolution to use.
       ResolutionPreset.max,
     );
-
-    flashMode = FlashMode.off;
 
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
@@ -86,7 +85,9 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
             );
           } else {
             // Otherwise, display a loading indicator.
-            return const LoadingPage();
+            return const LoadingPage(
+              message: 'Loading Camera...',
+            );
           }
         },
       ),
@@ -147,24 +148,16 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
                     flashMode = FlashMode.auto;
                     break;
                   case 1:
-                    flashMode = FlashMode.off;
+                    flashMode = FlashMode.torch;
                     break;
                   case 2:
-                    flashMode = FlashMode.always;
+                    flashMode = FlashMode.off;
                     break;
                 }
                 _controller.setFlashMode(flashMode);
               });
             },
-            child: Icon(icons[flashIndex])//const Icon(Icons.flash_off_outlined),
-            /*switch (flashMode) {
-              case FlashMode.off:
-                const Icon(Icons.flash_off_outlined);
-                break;
-              case FlashMode.always:
-                const Icon(Icons.flash_on_outlined);
-                break;
-            }, */
+            child: Icon(MyIcons.flashIcons[flashIndex])
           ),
         ],
       ),

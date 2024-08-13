@@ -23,6 +23,7 @@ class _IdentificationResultsPageState extends State<IdentificationResultsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fingerprint Identification'),
+        automaticallyImplyLeading: false,
       ),
       body: widget.matchFound ?
       Center(
@@ -39,10 +40,9 @@ class _IdentificationResultsPageState extends State<IdentificationResultsPage> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Identified as ${widget.username},',
+              'Identified as ${widget.username}',
               style: const TextStyle(
                 fontSize: 30,
-                
               ),
               textAlign: TextAlign.center,
             ),
@@ -51,7 +51,6 @@ class _IdentificationResultsPageState extends State<IdentificationResultsPage> {
               'Score: ${widget.score}',
               style: const TextStyle(
                 fontSize: 30,
-                
               ),
               textAlign: TextAlign.center,
             ),

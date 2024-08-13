@@ -33,7 +33,6 @@ class EnrollmentStatePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pop(context);
               },
               child: const Text('Back to Home'),
             ),

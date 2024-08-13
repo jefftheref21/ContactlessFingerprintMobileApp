@@ -242,7 +242,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
             padding: const EdgeInsets.all(10.0),
             child: Column(
               children: <Widget>[
-                const Text("Left Hand", style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint, fontSize: 16)),
+                const Text("Left Hand", style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16)),
                 Expanded(
                   child: Container(
                     color: MyColors.lakeLaselle,
@@ -265,7 +265,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        const Text('Input', style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16)),
+                        const Text('Inputted', style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.lakeLaselle, fontSize: 16)),
                         for (var enh in widget.results.leftInpEnh) 
                           Padding(
                             padding: const EdgeInsets.all(15.0),
@@ -275,7 +275,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                     ),
                   ),
                 ),
-                const Text("Right Hand", style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.bairdPoint, fontSize: 16)),
+                const Text("Right Hand", style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16)),
                 Expanded(
                   child: Container(
                     color: MyColors.lakeLaselle,
@@ -298,7 +298,7 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        const Text('Input', style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.niagaraWhirlpool, fontSize: 16)),
+                        const Text('Inputted', style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.lakeLaselle, fontSize: 16)),
                         for (var enh in widget.results.rightInpEnh)
                           Padding(
                             padding: const EdgeInsets.all(15.0),

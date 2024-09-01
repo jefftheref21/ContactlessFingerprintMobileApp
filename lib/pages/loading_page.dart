@@ -4,7 +4,10 @@ import 'package:fingerprint/constants.dart';
 class LoadingPage extends StatefulWidget {
   const LoadingPage({
     super.key,
+    required this.message,
   });
+
+  final String message;
 
   @override
   State<LoadingPage> createState() => LoadingPageState();
@@ -16,7 +19,7 @@ class LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    _message = "Please wait...";
+    _message = widget.message;
   }
 
   void updateMessage(String newMessage) {

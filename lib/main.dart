@@ -41,7 +41,6 @@ class Biometrics extends StatelessWidget {
         tabBarTheme: const TabBarTheme(
           labelColor: MyColors.ubBlue,
           unselectedLabelColor: MyColors.hayesHallWhite,
-          
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: MyColors.ubBlue),
         scaffoldBackgroundColor: MyColors.victorEBlue,

@@ -5,7 +5,8 @@ import 'package:fingerprint/pages/verification_page.dart';
 import 'package:fingerprint/pages/identification_page.dart';
 import 'package:fingerprint/constants.dart';
 
-
+// Uri to flask web server, sometimes done through ngrok if running
+// on UB server
 // String baseUri = "http://192.168.0.22:5000";
 String baseUri = "http://128.205.33.222:5000";
 

@@ -30,6 +30,7 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin{
   FlashMode flashMode = FlashMode.auto;
   int flashIndex = 0;
 
+  // Meant for tap to focus, not implemented
   Offset? _focusPoint;
   double _currentZoom = 1.0;
 

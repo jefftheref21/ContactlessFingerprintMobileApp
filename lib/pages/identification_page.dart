@@ -26,21 +26,20 @@ class IdentificationPage extends StatefulWidget {
 enum Mode { distal, setBased, fourFingers }
 
 class _IdentifierPageState extends State<IdentificationPage> {
-  late Mode defaultMode;
+  // late Mode defaultMode;
   late String fingerprintPath;
 
-  late bool scanComplete;
-  late bool leftSide;
+  bool scanComplete = false;
+  bool leftSide = true;
 
   late String username;
   late double score;
+  bool _isPressed = false;
 
   @override
   void initState() {
     super.initState();
-    defaultMode = Mode.distal;
-    scanComplete = false;
-    leftSide = true;
+    // defaultMode = Mode.distal;
   }
 
   @override
@@ -63,34 +62,35 @@ class _IdentifierPageState extends State<IdentificationPage> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0, bottom: 15.0, left: 15.0, right: 15.0),
-            child: SegmentedButton<Mode>(
-              segments: const <ButtonSegment<Mode>>[
-                ButtonSegment<Mode>(
-                    value: Mode.distal,
-                    label: Text('Distal'),
-                    icon: Icon(Icons.sensors)),
-                ButtonSegment<Mode>(
-                    value: Mode.setBased,
-                    label: Text('Set-based'),
-                    icon: Icon(Icons.photo_library)),
-                ButtonSegment<Mode>(
-                    value: Mode.fourFingers,
-                    label: Text('Four Fingers'),
-                    icon: Icon(Icons.back_hand)),
-              ],
-              selected: <Mode>{defaultMode},
-              onSelectionChanged: (Set<Mode> newSelection) {
-                setState(() {
-                  // By default there is only a single segment that can be
-                  // selected at one time, so its value is always the first
-                  // item in the selected set.
-                  defaultMode = newSelection.first;
-                });
-              },
-            ),
-          ),
+          // Meant for selecting type of model segmentation
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 30.0, bottom: 15.0, left: 15.0, right: 15.0),
+          //   child: SegmentedButton<Mode>(
+          //     segments: const <ButtonSegment<Mode>>[
+          //       ButtonSegment<Mode>(
+          //           value: Mode.distal,
+          //           label: Text('Distal'),
+          //           icon: Icon(Icons.sensors)),
+          //       ButtonSegment<Mode>(
+          //           value: Mode.setBased,
+          //           label: Text('Set-based'),
+          //           icon: Icon(Icons.photo_library)),
+          //       ButtonSegment<Mode>(
+          //           value: Mode.fourFingers,
+          //           label: Text('Four Fingers'),
+          //           icon: Icon(Icons.back_hand)),
+          //     ],
+          //     selected: <Mode>{defaultMode},
+          //     onSelectionChanged: (Set<Mode> newSelection) {
+          //       setState(() {
+          //         // By default there is only a single segment that can be
+          //         // selected at one time, so its value is always the first
+          //         // item in the selected set.
+          //         defaultMode = newSelection.first;
+          //       });
+          //     },
+          //   ),
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -149,7 +149,7 @@ class _IdentifierPageState extends State<IdentificationPage> {
           scanComplete ? Image.file(File(fingerprintPath), width: 150, height: 200) : MyIcons.verificationIcon,
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () async {
+            onPressed: !_isPressed ? () async {
               if (scanComplete == false) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -200,7 +200,7 @@ class _IdentifierPageState extends State<IdentificationPage> {
                   builder: (context) => IdentificationResultsPage(matchFound: successful, username: username, score: score),
                 ),
               );
-            },
+            } : null,
             child: const Text("Identify")
           ),
           const SizedBox(height: 60)

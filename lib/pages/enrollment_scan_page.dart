@@ -157,7 +157,7 @@ class _EnrollmentScanPageState extends State<EnrollmentScanPage>{
                   return;
                 }
 
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) {

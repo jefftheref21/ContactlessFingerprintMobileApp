@@ -18,19 +18,18 @@ class EnrollmentPage extends StatefulWidget {
   State<EnrollmentPage> createState() => _EnrollmentPageState();
 }
 
-
 class _EnrollmentPageState extends State<EnrollmentPage>{
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   
-  late bool passwordVisible;
+  bool passwordVisible = false;
   late User user;
+  bool _isPressed = false;
 
   @override
   void initState() {
     super.initState();
-    passwordVisible = false;
     user = User(username: '', password: '', leftFingerprintPath: '', rightFingerprintPath: '');
   }
 
@@ -151,10 +150,13 @@ class _EnrollmentPageState extends State<EnrollmentPage>{
             Padding(
               padding: const EdgeInsets.only(top: 30.0),
               child: ElevatedButton(
-                onPressed: () async {
+                onPressed: !_isPressed ? () async {
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
+                  setState(() {
+                    _isPressed = true;
+                  });
 
                   user.username = usernameController.text;
                   user.password = passwordController.text;
@@ -184,7 +186,7 @@ class _EnrollmentPageState extends State<EnrollmentPage>{
                       },
                     ),
                   );
-              },
+              } : null,
                 child: const Text('Next'),
               ),
             ),

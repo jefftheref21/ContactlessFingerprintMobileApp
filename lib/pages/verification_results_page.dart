@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fingerprint/models/user.dart';
 import 'package:fingerprint/models/full_results.dart';
 import 'package:fingerprint/constants.dart';
-import 'dart:typed_data';
 
 class VerificationResultsPage extends StatefulWidget {
   const VerificationResultsPage({
@@ -40,11 +39,8 @@ class _VerificationResultsPageState extends State<VerificationResultsPage> with 
             icon: const Icon(Icons.exit_to_app),
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pop(context);
-              // Handle search button press
             },
           ),
-          // Add more IconButton widgets as needed
         ],
         title: const Text('Verification Results'),
         automaticallyImplyLeading: false,
